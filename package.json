@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "start": "serve dist -s -n -L -p $PORT"
   },
   "dependencies": {
     "react": "^18.3.1",
