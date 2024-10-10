@@ -82,7 +82,7 @@ const ProductListPage = () => {
           <motion.div key={product.id} variants={itemVariants}>
             <Card className="flex flex-col h-full">
               <CardHeader>
-                <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-contain" />
+                <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover mb-4" />
                 <CardTitle>{product.name}</CardTitle>
               </CardHeader>
               <CardContent>

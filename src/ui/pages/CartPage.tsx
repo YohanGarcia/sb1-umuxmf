@@ -29,7 +29,7 @@ const CartPage = () => {
 
   return (
     <motion.div 
-      className="container mx-auto py-8"
+      className="container mx-auto py-8 "
       initial="hidden"
       animate="visible"
       variants={containerVariants}

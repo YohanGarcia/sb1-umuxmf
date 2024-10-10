@@ -39,8 +39,8 @@ const CategoryDropdown = () => {
   }
 
   return (
-    <Select onValueChange={handleCategoryChange} value={selectedCategory}>
-      <SelectTrigger className="w-full md:w-[180px] bg-primary text-white">
+    <Select onValueChange={handleCategoryChange} value={selectedCategory} >
+      <SelectTrigger className="w-full md:w-[180px] bg-primary text-white rounded-lg border-none">
         <SelectValue placeholder="Categorías" />
       </SelectTrigger>
       <SelectContent>

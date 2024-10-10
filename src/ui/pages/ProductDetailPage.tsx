@@ -48,12 +48,12 @@ const ProductDetailPage = () => {
 
   return (
     <motion.div 
-      className="container mx-auto py-8"
+      className="container mx-auto py-8 "
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <Card>
+      <Card className='mt-20'>
         <CardHeader>
           <motion.div variants={itemVariants}>
             <CardTitle className="text-3xl font-bold">{product.name}</CardTitle>
@@ -64,7 +64,7 @@ const ProductDetailPage = () => {
           <motion.img 
             src={product.imageUrl} 
             alt={product.name} 
-            className="w-full h-auto object-contain"
+            className="w-full h-auto object-cover"
             variants={itemVariants}
           />
           <motion.div variants={itemVariants}>

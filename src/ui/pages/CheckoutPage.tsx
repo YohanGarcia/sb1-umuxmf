@@ -39,8 +39,8 @@ const CheckoutPage = () => {
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-3xl font-bold mb-6">Finalizar Compra</h2>
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className='col-span-2'>
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>Resumen del Pedido</CardTitle>
@@ -58,7 +58,7 @@ const CheckoutPage = () => {
                   {items.map((item) => (
                     <tr key={item.product.id} className="border-b">
                       <td className="py-2">{item.product.name}</td>
-                      <td className="text-right py-2">{item.quantity}</td>
+                      <td className="text-center py-2">{item.quantity}</td>
                       <td className="text-right py-2">{(item.product.price * item.quantity).toFixed(2)} €</td>
                     </tr>
                   ))}
@@ -72,7 +72,7 @@ const CheckoutPage = () => {
               </table>
             </CardContent>
           </Card>
-          <Card>
+          <Card className=''>
             <CardHeader>
               <CardTitle>Detalles de Envío</CardTitle>
             </CardHeader>
@@ -96,7 +96,7 @@ const CheckoutPage = () => {
             </CardContent>
           </Card>
         </div>
-        <Card>
+        <Card className='col-span-2 md:col-span-1'>
           <CardHeader>
             <CardTitle>Detalles de Pago</CardTitle>
           </CardHeader>
