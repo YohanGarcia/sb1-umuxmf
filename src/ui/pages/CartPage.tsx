@@ -1,40 +1,81 @@
 import { useCartStore } from '../../infrastructure/store/useCartStore'
+import { Button } from '../../components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
+import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 const CartPage = () => {
   const { items, removeItem, clearCart } = useCartStore()
 
   const totalPrice = items.reduce((total, item) => total + item.product.price * item.quantity, 0)
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { x: -20, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1
+    }
+  }
+
   return (
-    <div className="container">
-      <h2>Tu Carrito</h2>
+    <motion.div 
+      className="container mx-auto py-8"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.h2 className="text-3xl font-bold mb-6" variants={itemVariants}>Tu Carrito</motion.h2>
       {items.length === 0 ? (
-        <p>Tu carrito está vacío.</p>
+        <motion.p variants={itemVariants}>Tu carrito está vacío.</motion.p>
       ) : (
-        <>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Resumen del carrito</CardTitle>
+          </CardHeader>
+          <CardContent>
             {items.map((item) => (
-              <li key={item.product.id} style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                  <img src={item.product.imageUrl} alt={item.product.name} style={{ width: '100px', height: '100px', objectFit: 'contain' }} />
+              <motion.div key={item.product.id} className="flex items-center justify-between py-4 border-b" variants={itemVariants}>
+                <div className="flex items-center space-x-4">
+                  <img src={item.product.imageUrl} alt={item.product.name} className="w-16 h-16 object-contain" />
                   <div>
-                    <h3>{item.product.name}</h3>
+                    <h3 className="font-semibold">{item.product.name}</h3>
                     <p>Cantidad: {item.quantity}</p>
-                    <p style={{ color: '#B12704', fontWeight: 'bold' }}>{(item.product.price * item.quantity).toFixed(2)} €</p>
                   </div>
                 </div>
-                <button onClick={() => removeItem(item.product.id)} className="btn" style={{ backgroundColor: '#FFA41C' }}>Eliminar</button>
-              </li>
+                <div className="text-right">
+                  <p className="font-bold text-primary">{(item.product.price * item.quantity).toFixed(2)} €</p>
+                  <Button variant="destructive" size="sm" onClick={() => removeItem(item.product.id)}>Eliminar</Button>
+                </div>
+              </motion.div>
             ))}
-          </ul>
-          <div style={{ marginTop: '2rem', textAlign: 'right' }}>
-            <h3>Total: {totalPrice.toFixed(2)} €</h3>
-            <button onClick={clearCart} className="btn" style={{ backgroundColor: '#FFA41C', marginRight: '10px' }}>Vaciar carrito</button>
-            <button className="btn" style={{ backgroundColor: '#FFD814' }}>Proceder al pago</button>
-          </div>
-        </>
+          </CardContent>
+          <CardFooter className="flex justify-between items-center">
+            <div>
+              <h3 className="text-2xl font-bold">Total: {totalPrice.toFixed(2)} €</h3>
+            </div>
+            <div>
+              <Button variant="outline" onClick={clearCart} className="mr-2">Vaciar carrito</Button>
+              <Button>
+              <Link to="/checkout" className="amazon-button">
+              
+                Proceder al pago
+              </Link>
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
       )}
-    </div>
+    </motion.div>
   )
 }
 

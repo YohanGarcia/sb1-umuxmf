@@ -5,6 +5,10 @@ import { Product } from '../../domain/entities/Product'
 import { GetAllProducts } from '../../domain/usecases/GetAllProducts'
 import { ProductApi } from '../../infrastructure/api/ProductApi'
 import { useCartStore } from '../../infrastructure/store/useCartStore'
+import { Button } from '../../components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
+import { motion } from 'framer-motion'
+import toast from 'react-hot-toast'
 
 const ProductListPage = () => {
   const [products, setProducts] = useState<Product[]>([])
@@ -44,28 +48,60 @@ const ProductListPage = () => {
 
   const handleAddToCart = (product: Product) => {
     addToCart(product)
-    alert('Producto añadido al carrito')
+    toast.success('Producto añadido al carrito')
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
   }
 
   return (
-    <div className="container">
-      <h2>Nuestros Productos</h2>
-      <div className="product-grid">
+    <motion.div 
+      className="container mx-auto py-8"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.h2 className="text-3xl font-bold mb-6" variants={itemVariants}>Nuestros Productos</motion.h2>
+      <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" variants={containerVariants}>
         {products.map((product) => (
-          <div key={product.id} className="product-card">
-            <img src={product.imageUrl} alt={product.name} />
-            <h3>{product.name}</h3>
-            <p>{product.price.toFixed(2)} €</p>
-            <div className="product-actions">
-              <Link to={`/products/${product.id}`} className="btn">Ver detalles</Link>
-              <button onClick={() => handleAddToCart(product)} className="btn btn-cart">
-                <FaShoppingCart />
-              </button>
-            </div>
-          </div>
+          <motion.div key={product.id} variants={itemVariants}>
+            <Card className="flex flex-col h-full">
+              <CardHeader>
+                <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-contain" />
+                <CardTitle>{product.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold text-primary">{product.price.toFixed(2)} €</p>
+              </CardContent>
+              <CardFooter className="flex justify-between mt-auto">
+                <Button variant="outline" asChild>
+                  <Link to={`/products/${product.id}`}>Ver detalles</Link>
+                </Button>
+                <Button onClick={() => handleAddToCart(product)}>
+                  <FaShoppingCart className="mr-2" />
+                  Añadir
+                </Button>
+              </CardFooter>
+            </Card>
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
 

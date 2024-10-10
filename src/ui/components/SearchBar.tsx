@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Input } from "../../components/ui/input"
+import { Button } from "../../components/ui/button"
 
 const SearchBar = () => {
   const [query, setQuery] = useState('')
@@ -11,14 +13,15 @@ const SearchBar = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="search-bar">
-      <input
+    <form onSubmit={handleSubmit} className="flex w-full items-center space-x-2">
+      <Input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Buscar productos..."
+        className="flex-grow"
       />
-      <button type="submit">Buscar</button>
+      <Button type="submit">Buscar</Button>
     </form>
   )
 }
