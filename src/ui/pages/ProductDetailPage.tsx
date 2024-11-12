@@ -56,20 +56,20 @@ const ProductDetailPage = () => {
       <Card className='mt-20'>
         <CardHeader>
           <motion.div variants={itemVariants}>
-            <CardTitle className="text-3xl font-bold">{product.name}</CardTitle>
-            <CardDescription>{product.category}</CardDescription>
+            <CardTitle className="text-3xl font-bold">{product.nombre}</CardTitle>
+            <CardDescription>{product.categoria.nombre}</CardDescription>
           </motion.div>
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-6">
           <motion.img 
-            src={product.imageUrl} 
-            alt={product.name} 
+            src={product.imagenes[0]?.imagen}
+            alt={product.nombre} 
             className="w-full h-auto object-cover"
             variants={itemVariants}
           />
           <motion.div variants={itemVariants}>
             <p className="text-lg mb-4">{product.description}</p>
-            <p className="text-3xl font-bold text-primary mb-4">{product.price.toFixed(2)} €</p>
+            <p className="text-3xl font-bold text-primary mb-4">{product.precio}</p>
             <Button onClick={handleAddToCart} size="lg">Añadir al carrito</Button>
           </motion.div>
         </CardContent>

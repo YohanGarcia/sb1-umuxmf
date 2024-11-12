@@ -19,7 +19,8 @@ const CategoryDropdown = () => {
       try {
         const productApi = new ProductApi()
         const products = await productApi.getAll()
-        const uniqueCategories = Array.from(new Set(products.map(product => product.category).filter(Boolean)))
+
+        const uniqueCategories = Array.from(new Set(products.map(product => product.categoria?.nombre).filter(Boolean)))
         setCategories(['Todas las categorías', ...uniqueCategories])
       } catch (error) {
         console.error('Error fetching categories:', error)

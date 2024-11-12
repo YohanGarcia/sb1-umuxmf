@@ -18,7 +18,7 @@ const CheckoutPage = () => {
     cvv: ''
   })
 
-  const totalPrice = items.reduce((total, item) => total + item.product.price * item.quantity, 0)
+  const totalPrice = items.reduce((total, item) => total + item.product.precio * item.quantity, 0)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -50,16 +50,16 @@ const CheckoutPage = () => {
                 <thead>
                   <tr className="border-b">
                     <th className="text-left pb-2">Producto</th>
-                    <th className="text-right pb-2">Cantidad</th>
+                    <th className="text-center pb-2">Cantidad</th>
                     <th className="text-right pb-2">Precio</th>
                   </tr>
                 </thead>
                 <tbody>
                   {items.map((item) => (
                     <tr key={item.product.id} className="border-b">
-                      <td className="py-2">{item.product.name}</td>
+                      <td className="py-2">{item.product.nombre}</td>
                       <td className="text-center py-2">{item.quantity}</td>
-                      <td className="text-right py-2">{(item.product.price * item.quantity).toFixed(2)} €</td>
+                      <td className="text-right py-2">{(item.product.precio * item.quantity).toFixed(2)} </td>
                     </tr>
                   ))}
                 </tbody>

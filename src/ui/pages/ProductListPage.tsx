@@ -29,14 +29,14 @@ const ProductListPage = () => {
 
       if (searchQuery) {
         filteredProducts = filteredProducts.filter(product => 
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
           product.description.toLowerCase().includes(searchQuery.toLowerCase())
         )
       }
 
       if (categoryFilter) {
         filteredProducts = filteredProducts.filter(product => 
-          product.category.toLowerCase() === categoryFilter.toLowerCase()
+          product.categoria.nombre.toLowerCase() === categoryFilter.toLowerCase()
         )
       }
 
@@ -82,11 +82,11 @@ const ProductListPage = () => {
           <motion.div key={product.id} variants={itemVariants}>
             <Card className="flex flex-col h-full">
               <CardHeader>
-                <img src={product.imageUrl} alt={product.name} className="w-full h-48 object-cover mb-4" />
-                <CardTitle>{product.name}</CardTitle>
+                <img src={product.imagenes[0]?.imagen} alt={product.nombre} className="w-full h-48 object-cover mb-4 rounded-lg " />
+                <CardTitle>{product.nombre}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-primary">{product.price.toFixed(2)} €</p>
+                <p className="text-2xl font-bold text-primary">{product.precio}</p>
               </CardContent>
               <CardFooter className="flex justify-between mt-auto">
                 <Button variant="outline" asChild>

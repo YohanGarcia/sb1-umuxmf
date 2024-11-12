@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 const CartPage = () => {
   const { items, removeItem, clearCart } = useCartStore()
 
-  const totalPrice = items.reduce((total, item) => total + item.product.price * item.quantity, 0)
+  const totalPrice = items.reduce((total, item) => total + item.product.precio * item.quantity, 0)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -46,14 +46,14 @@ const CartPage = () => {
             {items.map((item) => (
               <motion.div key={item.product.id} className="flex items-center justify-between py-4 border-b" variants={itemVariants}>
                 <div className="flex items-center space-x-4">
-                  <img src={item.product.imageUrl} alt={item.product.name} className="w-16 h-16 object-contain" />
+                  <img src={item.product.imagenes[0]?.imagen} alt={item.product.nombre} className="w-16 h-16 object-contain" />
                   <div>
-                    <h3 className="font-semibold">{item.product.name}</h3>
+                    <h3 className="font-semibold">{item.product.nombre}</h3>
                     <p>Cantidad: {item.quantity}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-primary">{(item.product.price * item.quantity).toFixed(2)} €</p>
+                  <p className="font-bold text-primary">{(item.product.precio * item.quantity).toFixed(2)} </p>
                   <Button variant="destructive" size="sm" onClick={() => removeItem(item.product.id)}>Eliminar</Button>
                 </div>
               </motion.div>
@@ -61,7 +61,7 @@ const CartPage = () => {
           </CardContent>
           <CardFooter className="flex justify-between items-center">
             <div>
-              <h3 className="text-2xl font-bold">Total: {totalPrice.toFixed(2)} €</h3>
+              <h3 className="text-2xl font-bold">Total: {totalPrice.toFixed(2)} </h3>
             </div>
             <div>
               <Button variant="outline" onClick={clearCart} className="mr-2">Vaciar carrito</Button>

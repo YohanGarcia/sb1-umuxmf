@@ -29,12 +29,12 @@ export const CardProducts = ({product}: CardProductsProps) => {
     <Card className="amazon-card ">
       <CardHeader>
         <img
-          src={product.imageUrl}
-          alt={product.name}
+          src={product.imagenes[0]?.imagen}
+          alt={product.nombre}
           className="w-full h-48 object-cover mb-4 rounded-lg "
         />
-        <CardTitle>{product.name}</CardTitle>
-        <CardDescription>{product.price.toFixed(2)} €</CardDescription>
+        <CardTitle>{product.nombre}</CardTitle>
+        <CardDescription>{product.precio} </CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between mt-auto">
       <Button variant="outline" asChild>

@@ -1,18 +1,27 @@
-import { Link } from "react-router-dom";
-import { FaShoppingCart, FaBars } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaShoppingCart, FaBars, FaUser } from "react-icons/fa";
 import SearchBar from "./SearchBar";
 import CategoryDropdown from "./CategoryDropdown";
 import { useCartStore } from "../../infrastructure/store/useCartStore";
 import { Button } from "../../components/ui/button";
 import { useState } from "react";
+import { useAuthStore } from "@/infrastructure/store/useAuthStore";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   const totalItems = useCartStore((state) => state.getTotalItems());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuthStore()
+
+  const handleLogout = () => {
+    logout();
+    navigate("/"); // Redirige a la página principal después del cierre de sesión
+  };
 
   return (
     <header className="bg-gray-800 text-white py-5 fixed w-full">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto ">
         <div className="flex justify-between items-center">
           <div id="branding" className="flex items-center">
             <h1 className="text-2xl font-bold">
@@ -53,6 +62,14 @@ const Header = () => {
                   <span>Carrito ({totalItems})</span>
                 </Link>
               </li>
+              {isAuthenticated ? (
+                <>
+                  <li><Link to="/profile" className="hover:text-primary"><FaUser /> Perfil</Link></li>
+                  <li><Button onClick={logout}>Cerrar Sesión</Button></li>
+                </>
+              ) : (
+                <li><Link to="/login" className="hover:text-primary">Iniciar Sesión</Link></li>
+              )}
             </ul>
           </nav>
           <Button
@@ -88,6 +105,20 @@ const Header = () => {
                     <FaShoppingCart />
                     <span>Carrito ({totalItems})</span>
                   </Link>
+                </li>
+                <li>
+                  {isAuthenticated ? (
+                    <>
+                      <Link to="/profile" className="hover:text-primary">
+                        <FaUser /> Perfil
+                      </Link>
+                      <Button onClick={handleLogout}>Cerrar Sesión</Button>
+                    </>
+                  ) : (
+                    <Link to="/login" className="hover:text-primary">
+                      Iniciar Sesión
+                    </Link>
+                  )}
                 </li>
               </ul>
             </nav>
