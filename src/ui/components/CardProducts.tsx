@@ -19,7 +19,7 @@ interface CardProductsProps {
 
 export const CardProducts = ({product}: CardProductsProps) => {
   const addToCart = useCartStore((state) => state.addItem);
-
+  console.log(product);
   const handleAddToCart = (product: Product) => {
     addToCart(product);
     toast.success("Producto añadido al carrito");

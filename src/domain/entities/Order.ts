@@ -1,12 +1,7 @@
 export interface Order {
-    id: string;
-    userId: string;
-    date: string;
-    total: number;
-    status: 'pending' | 'processing' | 'shipped' | 'delivered';
-    items: {
-      productId: string;
-      quantity: number;
-      price: number;
-    }[];
-  }
+  id: number;
+  date: string;  // Fecha de la orden, como string (ISO 8601)
+  total: number; // Total de la orden
+  status: string; // Estado de la orden, por ejemplo "pendiente", "completada", etc.
+  // Agrega más campos según sea necesario
+}

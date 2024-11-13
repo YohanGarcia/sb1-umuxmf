@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-gray-800 text-white py-5 fixed w-full">
+    <header className="bg-gray-800 text-white py-5 fixed w-full z-10">
       <div className="container mx-auto ">
         <div className="flex justify-between items-center">
           <div id="branding" className="flex items-center">
@@ -33,7 +33,7 @@ const Header = () => {
           </div>
           <Link
             to="/cart"
-            className="flex items-center space-x-2 hover:text-primary  md:hidden"
+            className="flex items-center space-x-2 hover:text-primary md:hidden"
           >
             <FaShoppingCart />
             <span>Carrito ({totalItems})</span>

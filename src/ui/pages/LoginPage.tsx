@@ -24,7 +24,6 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log(formData);
     e.preventDefault();
     clearError();
     const success = await login(formData.username, formData.password);
