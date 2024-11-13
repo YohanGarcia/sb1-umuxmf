@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Product } from '../../domain/entities/Product';
 import { ProductRepository } from '../../domain/repositories/ProductRepository';
 
-const API_URL = 'http://127.0.0.1:8000/api'
+const API_URL = import.meta.env.VITE_API_URL;
 
 export class ProductApi implements ProductRepository {
   async getAll(): Promise<Product[]> {
