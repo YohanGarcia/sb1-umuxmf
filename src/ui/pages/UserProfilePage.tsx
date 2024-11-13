@@ -148,7 +148,12 @@ const UserProfilePage = () => {
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Mis Pedidos</CardTitle>
+          <CardTitle>
+            <h2 className="text-2xl font-bold mb-4 flex items-center">
+              <Package className="mr-2" />
+              Historial de Órdenes
+            </h2>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
