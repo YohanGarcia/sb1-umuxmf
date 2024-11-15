@@ -1,18 +1,38 @@
-export interface Product {
-  id: string;
-  nombre: string;
-  description: string;
-  precio: number;
-  categoria: Category;
-  imagenes: Imagen[]
-}
-
-export interface Category {
-  id: string;
-  nombre: string;
-}
-
 export interface Imagen {
-  id: string;
+  id: number;
   imagen: string;
+}
+
+export interface Categoria {
+  id: number;
+  nombre: string;
+  fecha_creacion: string;
+}
+
+export interface Producto {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio: string;
+  stock: number;
+  categoria: Categoria;
+  fecha_creacion: string;
+  fecha_actualizacion: string;
+  imagenes: Imagen[];
+}
+
+export interface Item {
+  id: number;
+  cantidad: number;
+  precio: string;
+  producto: Producto;  // Cambiar a Producto para incluir el nombre y otros detalles
+  total_item: number;
+}
+
+export interface Orden {
+  id: number;
+  estado: string;
+  fecha_creacion: string;
+  total: string;
+  items: Item[];
 }

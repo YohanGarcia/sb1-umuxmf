@@ -6,13 +6,14 @@ import { useCartStore } from "../../infrastructure/store/useCartStore";
 import { Button } from "../../components/ui/button";
 import { useState } from "react";
 import { useAuthStore } from "@/infrastructure/store/useAuthStore";
+import { ShoppingCart } from "lucide-react";
 
 const Header = () => {
   const navigate = useNavigate();
 
   const totalItems = useCartStore((state) => state.getTotalItems());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuthStore()
+  const { isAuthenticated, logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
@@ -56,19 +57,35 @@ const Header = () => {
               <li>
                 <Link
                   to="/cart"
-                  className="flex items-center space-x-2 hover:text-primary"
+                  className="flex items-center space-x-2 hover:text-primary relative"
                 >
-                  <FaShoppingCart />
-                  <span>Carrito ({totalItems})</span>
+                  <ShoppingCart size={24} />
+                  <span className="absolute -top-2 -right-2 bg-yellow-400 text-gray-900 rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    {totalItems}
+                  </span>
+                  {/* <span>Carrito ({totalItems})</span> */}
                 </Link>
               </li>
               {isAuthenticated ? (
                 <>
-                  <li><Link to="/profile" className="hover:text-primary"><FaUser /> Perfil</Link></li>
-                  <li><Button onClick={logout}>Cerrar Sesión</Button></li>
+                  <li>
+                    <Link to="/profile" className="hover:text-primary">
+                      <span className="flex items-center space-x-2">
+                        <FaUser size={20} />
+                        <span>Perfil</span>
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Button onClick={logout}>Cerrar Sesión</Button>
+                  </li>
                 </>
               ) : (
-                <li><Link to="/login" className="hover:text-primary">Iniciar Sesión</Link></li>
+                <li>
+                  <Link to="/login" className="hover:text-primary">
+                    Iniciar Sesión
+                  </Link>
+                </li>
               )}
             </ul>
           </nav>

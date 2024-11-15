@@ -17,7 +17,7 @@ import {
 
 import { userProfileStore } from "@/infrastructure/store/userProfileStore";
 
-import { Package, Loader2 } from "lucide-react";
+import { Package, Loader2, Key } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -87,12 +87,7 @@ const UserProfilePage = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      ID de Usuario
-                    </p>
-                    <p>{userProfile.id}</p>
-                  </div>
+   
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
                       Fecha de Registro
@@ -159,6 +154,7 @@ const UserProfilePage = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                {/* <TableHead>Id</TableHead> */}
                 <TableHead>Producto</TableHead>
                 <TableHead>Nombre</TableHead>
                 <TableHead>Fecha</TableHead>
@@ -166,22 +162,66 @@ const UserProfilePage = () => {
                 <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
+{/* 
+            {userProfile?.ordenes.map((orden) => (
+              <>
+                {orden.items.map((item, index) => (
+                  <TableBody className="divide-y divide-gray-200">
+                    <TableRow key={item.id}>
+                      <TableCell className="w-10 h-10">
+                        {item.id}
+                      </TableCell>
+                      <TableCell className="w-10 h-10">
+                        <div className="relative w-10 h-10 flex items-center justify-center">
+                          {item.producto.imagenes.map((imagen, index) => (
+                            <img
+                              src={imagen.imagen}
+                              alt={item.producto.nombre}
+                              className={`absolute top-0 left-0 w-15 h-15 rounded-sm shadow-md transition-all duration-300 ease-in-out ${
+                                index === 0
+                                  ? "z-30"
+                                  : index === 1
+                                  ? "z-20 translate-x-1 translate-y-1"
+                                  : "z-10 translate-x-2 translate-y-2"
+                              } hover:z-40 hover:scale-100      `}
+                            />
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span>{item.producto.nombre}</span>
+                      </TableCell>
+                      <TableCell>
+                    {new Date(order.fecha_creacion).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{order.total}</TableCell>
+                  <TableCell>{order.estado}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                ))}
+              </>
+            ))} */}
+
             <TableBody>
               {userProfile?.ordenes.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>
-                    {order.items.slice(0, 1).map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center space-x-2"
-                      >
-                        <img
-                          src={item.producto.imagenes[0].imagen}
-                          alt={item.producto.nombre}
-                          className="h-12 w-15 rounded-sm"
-                        />
-                      </div>
-                    ))}
+                    <div className="relative w-10 h-10 flex items-center justify-center rounded-sm shadow-md">
+                      {order.items.map((item, index) => (
+            
+                          <img
+                            src={item.producto.imagenes[0].imagen}
+                            alt={item.producto.nombre}
+                            className={`absolute top-0 left-0 w-10 h-10 rounded-sm shadow-md transition-all duration-300 ease-in-out cover ${
+                              index === 0
+                                ? "z-30"
+                                : index === 1
+                                ? "z-20 translate-x-1 translate-y-1"
+                                : "z-10 translate-x-2 translate-y-2"
+                            } hover:z-40 hover:scale-100      `}
+                          />
+                      ))}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <span>{order.items[0].producto.nombre}</span>

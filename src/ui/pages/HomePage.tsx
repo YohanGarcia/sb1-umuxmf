@@ -3,43 +3,18 @@ import { Button } from "../../components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
 import { motion } from "framer-motion";
 import { CardProducts } from "../components/CardProducts";
 import { ProductApi } from "@/infrastructure/api/ProductApi";
-import { Product } from "@/domain/entities/Product";
+import { Producto } from "@/domain/entities/Product";
 import { useEffect, useState } from "react";
 
 const HomePage = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const featuredProducts = [
-    {
-      id: "1",
-      name: "Smartphone XYZ",
-      price: 599.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: "2",
-      name: "Laptop Pro",
-      price: 1299.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: "3",
-      name: "Auriculares Inalámbricos",
-      price: 199.99,
-      imageUrl:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    },
-  ];
-
+  const [products, setProducts] = useState<Producto[]>([]);
+ 
   useEffect(() => {
     const fetchProducts = async () => {
       const productRepository = new ProductApi();

@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { CartItem } from '../../domain/entities/CartItem';
-import { Product } from '../../domain/entities/Product';
+import { Producto } from '../../domain/entities/Product';
 
 interface CartStore {
   items: CartItem[];
-  addItem: (product: Product) => void;
+  addItem: (product: Producto) => void;
   removeItem: (productId: string) => void;
   clearCart: () => void;
   getTotalItems: () => number;
@@ -12,7 +12,7 @@ interface CartStore {
 
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
-  addItem: (product: Product) => {
+  addItem: (product: Producto) => {
     set((state) => {
       const existingItem = state.items.find(item => item.product.id === product.id);
       if (existingItem) {

@@ -6,21 +6,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Product } from "@/domain/entities/Product";
+import { Producto } from "@/domain/entities/Product";
 import { useCartStore } from "@/infrastructure/store/useCartStore";
 import toast from "react-hot-toast";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 interface CardProductsProps {
-  product: Product;
+  product: Producto;
 }
 
 
 export const CardProducts = ({product}: CardProductsProps) => {
   const addToCart = useCartStore((state) => state.addItem);
   console.log(product);
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Producto) => {
     addToCart(product);
     toast.success("Producto añadido al carrito");
   };
