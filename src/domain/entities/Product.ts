@@ -13,7 +13,7 @@ export interface Producto {
   id: number;
   nombre: string;
   descripcion: string;
-  precio: string;
+  precio: number;
   stock: number;
   categoria: Categoria;
   fecha_creacion: string;

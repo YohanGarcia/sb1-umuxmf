@@ -60,14 +60,14 @@ function App() {
 
 {/* Toaster para notificaciones globales */}
       <Toaster
-        position="bottom-right"
+        position="top-center"
         toastOptions={{
           className: "toast-custom",
           duration: 3000,
           style: {
             borderRadius: "8px",
-            padding: "16px",
-            fontSize: "16px",
+            padding: "5px",
+            fontSize: "10px",
             boxShadow:
               "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
           },

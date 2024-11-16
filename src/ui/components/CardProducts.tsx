@@ -16,14 +16,23 @@ interface CardProductsProps {
   product: Producto;
 }
 
+export const CardProducts = ({ product }: CardProductsProps) => {
+  const { addItem, items } = useCartStore()
 
-export const CardProducts = ({product}: CardProductsProps) => {
-  const addToCart = useCartStore((state) => state.addItem);
-  console.log(product);
   const handleAddToCart = (product: Producto) => {
-    addToCart(product);
+    
+    
+    const item = {
+      product, // El producto completo
+      quantity: 1, // Cantidad inicial
+    };
+    addItem(item); // Pasa un CartItem a la store
     toast.success("Producto añadido al carrito");
   };
+
+  // Busca si el producto ya está en el carrito y suma sus cantidades
+  const currentCartQuantity = items.find((item) => item.product.id === product.id)?.quantity || 0;
+
 
   return (
     <Card className="amazon-card ">
@@ -37,12 +46,15 @@ export const CardProducts = ({product}: CardProductsProps) => {
         <CardDescription>{product.precio} </CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between mt-auto">
-      <Button variant="outline" asChild>
+        <Button variant="outline" asChild>
           <Link to={`/products/${product.id}`}>Ver detalles</Link>
         </Button>
-        <Button onClick={() => handleAddToCart(product)}>
+        <Button 
+          onClick={() => handleAddToCart(product)}
+          disabled={currentCartQuantity >= product.stock}
+          >
           <FaShoppingCart className="mr-2" />
-          Añadir
+          {currentCartQuantity >= product.stock ? "Agotado" : "Añadir"}
         </Button>
       </CardFooter>
     </Card>

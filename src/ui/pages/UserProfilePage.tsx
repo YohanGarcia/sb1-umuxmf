@@ -162,49 +162,11 @@ const UserProfilePage = () => {
                 <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
-{/* 
-            {userProfile?.ordenes.map((orden) => (
-              <>
-                {orden.items.map((item, index) => (
-                  <TableBody className="divide-y divide-gray-200">
-                    <TableRow key={item.id}>
-                      <TableCell className="w-10 h-10">
-                        {item.id}
-                      </TableCell>
-                      <TableCell className="w-10 h-10">
-                        <div className="relative w-10 h-10 flex items-center justify-center">
-                          {item.producto.imagenes.map((imagen, index) => (
-                            <img
-                              src={imagen.imagen}
-                              alt={item.producto.nombre}
-                              className={`absolute top-0 left-0 w-15 h-15 rounded-sm shadow-md transition-all duration-300 ease-in-out ${
-                                index === 0
-                                  ? "z-30"
-                                  : index === 1
-                                  ? "z-20 translate-x-1 translate-y-1"
-                                  : "z-10 translate-x-2 translate-y-2"
-                              } hover:z-40 hover:scale-100      `}
-                            />
-                          ))}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span>{item.producto.nombre}</span>
-                      </TableCell>
-                      <TableCell>
-                    {new Date(order.fecha_creacion).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{order.total}</TableCell>
-                  <TableCell>{order.estado}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                ))}
-              </>
-            ))} */}
+
 
             <TableBody>
-              {userProfile?.ordenes.map((order) => (
-                <TableRow key={order.id}>
+              {userProfile?.ordenes.map((order, index) => (
+                <TableRow key={index}>
                   <TableCell>
                     <div className="relative w-10 h-10 flex items-center justify-center rounded-sm shadow-md">
                       {order.items.map((item, index) => (

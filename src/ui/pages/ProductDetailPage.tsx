@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Producto } from "../../domain/entities/Product";
 import { ProductApi } from "../../infrastructure/api/ProductApi";
@@ -16,15 +16,23 @@ const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Producto | null>(null);
 
-  const addToCart = useCartStore((state) => state.addItem);
-  const { items, addItem, removeItem } = useCartStore();
+  const { items, addItem, increaseQuantity, decreaseQuantity } = useCartStore();
 
   const [quantity, setQuantity] = useState(1);
   const [currentImage, setCurrentImage] = useState(product?.imagenes[0]);
 
-  const cartItem = items.find((item) => item.product.id === product?.id);
-  const currentQuantityInCart = cartItem?.quantity || 0;
 
+
+  const maxQuantity = product?.stock || 0
+
+  useEffect(() => {
+    if (product) {
+      const cartItem = items.find((item) => item.product.id === product.id);
+      setQuantity(cartItem?.quantity || 0); // Actualiza la cantidad según el carrito
+    }
+  }, [product, items]);
+
+  
   // Fetch product data on component mount
   useEffect(() => {
     const fetchProduct = async () => {
@@ -41,19 +49,28 @@ const ProductDetailPage = () => {
     fetchProduct();
   }, [id]);
 
+  
+
   useEffect(() => {
     if (product && product.imagenes.length > 0) {
       setCurrentImage(product.imagenes[currentImageIndex]); // Establecer la primera imagen
     }
   }, [currentImageIndex, product]);
-
-  // Add product to cart
+  if (!product) {
+    return <div className="container mx-auto py-8">Cargando...</div>;
+  }
   const handleAddToCart = () => {
-    if (product) {
-      addToCart(product);
+
+    // if (product && quantity > 0) {
+   
+      const newQuantity = + 1;
+      addItem({product, quantity:newQuantity });
       toast.success("Producto añadido al carrito");
-    }
+      setQuantity(1)
+    // }
   };
+
+  
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -65,34 +82,6 @@ const ProductDetailPage = () => {
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
 
-  if (!product) {
-    return <div className="container mx-auto py-8">Cargando...</div>;
-  }
-
-  // Handle quantity change
-  const handleQuantityChange = (change: number) => {
-    console.log(change);
-    if (!product) return;
-    // Calcular la nueva cantidad deseada, teniendo en cuenta el límite del stock
-    const newQuantity = Math.max(1, Math.min(quantity + change, product.stock));
-
-    // Si intentamos agregar más de lo que hay en stock, no hacer nada
-    if (change > 0 && currentQuantityInCart >= product.stock) {
-      return;
-    }
-    // Actualizar el estado local de cantidad
-    setQuantity(newQuantity);
-
-    if (change > 0) {
-      // Incrementar cantidad
-      addItem(product);
-    } else if (change < 0 && quantity > 1) {
-      // Decrementar cantidad, pero solo si hay más de 1
-      addItem({ ...product, quantity: quantity - 1 });
-    } else if (change < 0 && quantity === 1) {
-      removeItem(product.id.toString());
-    }
-  };
 
   return (
     <motion.div
@@ -182,15 +171,17 @@ const ProductDetailPage = () => {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => handleQuantityChange(-1)}
+                onClick={() => decreaseQuantity(product.id)}
+                disabled={quantity <= 1}
               >
                 <Minus className="h-4 w-4" />
               </Button>
-              <span className="w-12 text-center">{quantity}</span>
+              <span className="w-12 text-center">{quantity  || 0}</span>
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => handleQuantityChange(1)}
+                onClick={() => increaseQuantity(product.id)}
+                disabled={quantity >= maxQuantity}
               >
                 <Plus className="h-4 w-4" />
               </Button>
@@ -201,7 +192,6 @@ const ProductDetailPage = () => {
           </motion.div>
           <motion.div variants={itemVariants} className="flex gap-4">
             <Button
-              onClick={handleAddToCart}
               className="flex-1 amazon-button"
               size="lg"
             >
@@ -214,6 +204,7 @@ const ProductDetailPage = () => {
               variant="outline"
               className="flex-1"
               size="lg"
+              disabled={quantity >= maxQuantity}
             >
               Añadir al carrito
             </Button>
