@@ -13,82 +13,113 @@ interface CartStore {
   decreaseQuantity: (productId: number) => void;
 }
 
-export const useCartStore = create<CartStore>((set, get) => ({
-  items: [],
+export const useCartStore = create<CartStore>((set, get) => {
+  // Cargar los datos del carrito desde localStorage al inicializar
+  const loadCartFromLocalStorage = (): CartItem[] => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  };
 
-  addItem: (item) =>
-    set((state) => {
+  return {
+    items: loadCartFromLocalStorage(),
 
-      const existingItem = state.items.find(
-        (i) => i.product.id === item.product.id
-      );
+    addItem: (item) =>
+      set((state) => {
+        const existingItem = state.items.find(
+          (i) => i.product.id === item.product.id
+        );
 
-      // Verificar stock disponible
-      const totalQuantity = existingItem
-        ? existingItem.quantity + item.quantity
-        : item.quantity;
-      if (totalQuantity > item.product.stock) {
-        toast.error("No hay suficiente stock disponible");
-        return state; // No actualizar el estado
-      }
+        const totalQuantity = existingItem
+          ? existingItem.quantity + item.quantity
+          : item.quantity;
 
-      if (existingItem) {
-        console.log("Actualizando cantidad para:", item.product);
-        return {
-          items: state.items.map((i) =>
-            i.product.id === item.product.id
-              ? { ...i, quantity: i.quantity + item.quantity }
-              : i
-          ),
-        };
-      }
-      return {
-        items: [...state.items, { ...item, quantity: item.quantity || 1 }],
-      };
-    }),
+        if (totalQuantity > item.product.stock) {
+          toast.error("No hay suficiente stock disponible");
+          return state;
+        }
 
-  removeItem: (productId: number) => {
-    set((state) => ({
-      items: state.items.filter((item) => item.product.id !== productId),
-    }));
-  },
-  updateQuantity: (id, quantity) =>
-    set((state) => {
-      const product = state.items.find((i) => i.product.id === id)?.product;
-      if (product && quantity > product.stock) {
-        toast.error("No puedes añadir más de lo que hay en stock");
-        return state; // No actualizar el estado
-      }
-      return {
-        items: state.items.map((i) =>
+        const updatedItems = existingItem
+          ? state.items.map((i) =>
+              i.product.id === item.product.id
+                ? { ...i, quantity: i.quantity + item.quantity }
+                : i
+            )
+          : [...state.items, { ...item, quantity: item.quantity || 1 }];
+
+        // Guardar en localStorage
+        localStorage.setItem("cart", JSON.stringify(updatedItems));
+
+        return { items: updatedItems };
+      }),
+
+    removeItem: (productId: number) => {
+      set((state) => {
+        const updatedItems = state.items.filter(
+          (item) => item.product.id !== productId
+        );
+
+        localStorage.setItem("cart", JSON.stringify(updatedItems));
+
+        return { items: updatedItems };
+      });
+    },
+
+    updateQuantity: (id, quantity) =>
+      set((state) => {
+        const product = state.items.find((i) => i.product.id === id)?.product;
+        if (product && quantity > product.stock) {
+          toast.error("No puedes añadir más de lo que hay en stock");
+          return state;
+        }
+
+        const updatedItems = state.items.map((i) =>
           i.product.id === id ? { ...i, quantity } : i
-        ),
-      };
-    }),
-  clearCart: () => set({ items: [] }),
-  increaseQuantity: (productId) =>
-    set((state) => ({
-      items: state.items.map((item) =>
-        item.product.id === productId
-          ? { 
-              ...item, 
-              quantity: 
-              item.quantity < item.product.stock
-                ? item.quantity + 1
-                : item.product.stock
+        );
+
+        localStorage.setItem("cart", JSON.stringify(updatedItems));
+
+        return { items: updatedItems };
+      }),
+
+    clearCart: () => {
+      localStorage.removeItem("cart");
+      set({ items: [] });
+    },
+
+    increaseQuantity: (productId) =>
+      set((state) => {
+        const updatedItems = state.items.map((item) =>
+          item.product.id === productId
+            ? {
+                ...item,
+                quantity:
+                  item.quantity < item.product.stock
+                    ? item.quantity + 1
+                    : item.product.stock,
               }
-          : item
-      ),
-    })),
-  decreaseQuantity: (productId) =>
-    set((state) => ({
-      items: state.items.map((item) =>
-        item.product.id === productId && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      ),
-    })),
-  getTotalItems: () => {
-    return get().items.reduce((total, item) => total + item.quantity, 0);
-  },
-}));
+            : item
+        );
+
+        localStorage.setItem("cart", JSON.stringify(updatedItems));
+
+        return { items: updatedItems };
+      }),
+
+    decreaseQuantity: (productId) =>
+      set((state) => {
+        const updatedItems = state.items.map((item) =>
+          item.product.id === productId && item.quantity > 1
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        );
+
+        localStorage.setItem("cart", JSON.stringify(updatedItems));
+
+        return { items: updatedItems };
+      }),
+
+    getTotalItems: () => {
+      return get().items.reduce((total, item) => total + item.quantity, 0);
+    },
+  };
+});

@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { Minus, Plus, Star, StarHalf } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import FormatPrecio from "@/lib/FormtPrecio";
 
 const ProductDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -142,9 +143,9 @@ const ProductDetailPage = () => {
           </motion.div>
           <motion.div variants={itemVariants} className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-3x1 font-bold text-primary">
-                {product.precio}
-              </span>
+            <p className="text-xl font-bold text-primary">
+                <FormatPrecio precio={product.precio} />
+              </p>
               <span className="text-sm text-muted-foreground line-through">
                 100.00
               </span>

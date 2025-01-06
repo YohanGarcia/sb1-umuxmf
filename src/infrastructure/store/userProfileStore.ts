@@ -21,7 +21,6 @@ export const userProfileStore = create<UserProfileState>((set) => {
       set({ isLoading: true, error: null });
       try {
         const userProfile = await authApi.getCurrentUser();
-        console.log(userProfile);
         set({ userProfile, isLoading: false });
       } catch (error) {
         set({ error: 'Error al iniciar sesión', isLoading: false });

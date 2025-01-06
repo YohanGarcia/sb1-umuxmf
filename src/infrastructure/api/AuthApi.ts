@@ -31,7 +31,6 @@ export class AuthApi {
   async getCurrentUser(): Promise<User | null> {
     try {
       const response = await api.get(`/profile/`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error('Error al obtener el perfil del usuario:', error);

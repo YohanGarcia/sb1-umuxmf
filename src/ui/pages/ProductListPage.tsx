@@ -6,9 +6,16 @@ import { GetAllProducts } from "../../domain/usecases/GetAllProducts";
 import { ProductApi } from "../../infrastructure/api/ProductApi";
 import { useCartStore } from "../../infrastructure/store/useCartStore";
 import { Button } from "../../components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import FormatPrecio from "@/lib/FormtPrecio";
 
 const ProductListPage = () => {
   const [products, setProducts] = useState<Producto[]>([]);
@@ -31,14 +38,17 @@ const ProductListPage = () => {
         filteredProducts = filteredProducts.filter(
           (product) =>
             product.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.description.toLowerCase().includes(searchQuery.toLowerCase())
+            product.description
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
         );
       }
 
       if (categoryFilter) {
         filteredProducts = filteredProducts.filter(
           (product) =>
-            product.categoria.nombre.toLowerCase() === categoryFilter.toLowerCase()
+            product.categoria.nombre.toLowerCase() ===
+            categoryFilter.toLowerCase()
         );
       }
 
@@ -105,7 +115,9 @@ const ProductListPage = () => {
                   <CardTitle>{product.nombre}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold text-primary">{product.precio}</p>
+                  <p className="text-xl font-bold text-primary">
+                    <FormatPrecio precio={product.precio} />
+                  </p>
                 </CardContent>
                 <CardFooter className="flex justify-between mt-auto">
                   <Button variant="outline" asChild>
@@ -116,7 +128,9 @@ const ProductListPage = () => {
                     disabled={currentCartQuantity >= product.stock}
                   >
                     <FaShoppingCart className="mr-2" />
-                    {currentCartQuantity >= product.stock ? "Agotado" : "Añadir"}
+                    {currentCartQuantity >= product.stock
+                      ? "Agotado"
+                      : "Añadir"}
                   </Button>
                 </CardFooter>
               </Card>

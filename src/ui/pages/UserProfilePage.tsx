@@ -17,21 +17,20 @@ import {
 
 import { userProfileStore } from "@/infrastructure/store/userProfileStore";
 
-import { Package, Loader2, Key } from "lucide-react";
+import { Package, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 const UserProfilePage = () => {
-  const { userProfile, fecthUserProfile, isLoading, error } =
-    userProfileStore();
+  const { userProfile, fecthUserProfile, isLoading, error } =userProfileStore();
 
   useEffect(() => {
     fecthUserProfile();
   }, [fecthUserProfile]);
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 space-y-8">
       <h2 className="text-3xl font-bold mb-6">Mi Perfil</h2>
 
       <Card className="mb-8">
@@ -87,7 +86,6 @@ const UserProfilePage = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
-   
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
                       Fecha de Registro
@@ -144,10 +142,10 @@ const UserProfilePage = () => {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>
-            <h2 className="text-2xl font-bold mb-4 flex items-center">
+            <span className="text-2xl font-bold mb-4 flex items-center">
               <Package className="mr-2" />
               Historial de Órdenes
-            </h2>
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -163,14 +161,13 @@ const UserProfilePage = () => {
               </TableRow>
             </TableHeader>
 
-
             <TableBody>
-              {userProfile?.ordenes.map((order, index) => (
+              {userProfile?.ordenes?.map((order, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <div className="relative w-10 h-10 flex items-center justify-center rounded-sm shadow-md">
                       {order.items.map((item, index) => (
-            
+                        <div key={index}>
                           <img
                             src={item.producto.imagenes[0].imagen}
                             alt={item.producto.nombre}
@@ -182,11 +179,14 @@ const UserProfilePage = () => {
                                 : "z-10 translate-x-2 translate-y-2"
                             } hover:z-40 hover:scale-100      `}
                           />
+                        </div>
                       ))}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span>{order.items[0].producto.nombre}</span>
+                    <span>
+                      {order.items[0]?.producto?.nombre || "no hay producto"}
+                    </span>
                   </TableCell>
                   <TableCell>
                     {new Date(order.fecha_creacion).toLocaleDateString()}

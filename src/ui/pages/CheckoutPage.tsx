@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "../../infrastructure/store/useCartStore";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -13,7 +13,6 @@ import {
 } from "../../components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
-  Banknote,
   CreditCard,
   MapPin,
   ShoppingCart,
@@ -27,18 +26,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-const products: Product[] = [
-  { id: 1, name: "Producto 1", price: 19.99, quantity: 2 },
-  { id: 2, name: "Producto 2", price: 29.99, quantity: 1 },
-  { id: 3, name: "Producto 3", price: 39.99, quantity: 3 },
-];
+import PayPalForm from "../components/form/PaypalForm";
+import FormatPrecio from "@/lib/FormtPrecio";
+import { useExchangeStore } from "@/infrastructure/store/useExchangeStore";
 
 const shippingLocations = ["Ciudad A", "Ciudad B", "Ciudad C", "Ciudad D"];
 
@@ -46,50 +36,62 @@ const storeAddress = "Calle Principal 123, Ciudad Central";
 
 const CheckoutPage = () => {
   const { items, clearCart } = useCartStore();
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    address: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-  });
+  const { baseCurrency, rates, isLoading, fetchRates } =
+    useExchangeStore();
+
 
   useEffect(() => {
-    if (items.length === 0) {
-      navigate("/products");
-    }
+
+    fetchRates(baseCurrency);
   }, [items]);
+
+
+  if (items.length === 0) {
+    return <div className="container mx-auto py-8 flex justify-center">
+      <div className="flex flex-col items-center">
+        <h2 className="text-3xl font-bold mb-6">Tu carrito está vacío.</h2>
+        <Button asChild>
+          <Link to="/products">Ver todos los productos</Link>
+        </Button>
+      </div>  
+    </div>
+  }
 
   const [paymentMethod, setPaymentMethod] = useState("credit-card");
   const [deliveryMethod, setDeliveryMethod] = useState("pickup");
   const [shippingLocation, setShippingLocation] = useState("");
 
+  // total en DOP
   const totalPrice = items.reduce(
     (total, item) => total + Number(item.product.precio) * item.quantity,
     0
   );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  if (isLoading ) {
+    return <div>Cargando...</div>;
+  }
+
+  // conversion a USD (tasa desde el store)
+  const conversionRate = rates["DOP"];
+  const totalInUSD = totalPrice / conversionRate;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Aquí iría la lógica para procesar el pago
 
     clearCart();
-    navigate("/confirmation");
   };
+
+  const cartItens = items.map((items) => ({
+    product: items.product,
+    quantity: items.quantity,
+    totalUSD: totalInUSD,
+  }));
 
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-3xl font-bold mb-6">Finalizar Compra</h2>
+      <p>precio del dolar</p>
       <div className="grid md:grid-cols-3 gap-8">
         <div className="col-span-3">
           <Card>
@@ -114,10 +116,12 @@ const CheckoutPage = () => {
                       <td className="py-2">{item.product.nombre}</td>
                       <td className="text-center py-2">{item.quantity}</td>
                       <td className="text-right py-2">
-                        {(item.product.precio * item.quantity).toFixed(2)}{" "}
+                        <FormatPrecio precio={item.product.precio} />
                       </td>
                       <td className="text-right py-2">
-                        {(item.product.precio * item.quantity).toFixed(2)}{" "}
+                        <FormatPrecio
+                          precio={item.product.precio * item.quantity}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -128,7 +132,15 @@ const CheckoutPage = () => {
                       Total:
                     </td>
                     <td className="text-right font-bold py-2">
-                      {totalPrice.toFixed(2)}
+                      <FormatPrecio precio={totalPrice} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={4} className="text-right font-bold py-2">
+                      Total (USD):
+                    </td>
+                    <td className="text-right font-bold py-2">
+                      <FormatPrecio precio={totalInUSD} />
                     </td>
                   </tr>
                 </tfoot>
@@ -204,7 +216,7 @@ const CheckoutPage = () => {
                     Seleccione una ubicación:
                   </span>
                 </Label>
-                <Select onValueChange={setShippingLocation}>
+                <Select onValueChange={setShippingLocation}       >
                   <SelectTrigger id="shipping-location">
                     <SelectValue placeholder="Choose a location" />
                   </SelectTrigger>
@@ -355,41 +367,38 @@ const CheckoutPage = () => {
                     <Input id="cvv" placeholder="123" className="w-full" />
                   </div>
                 </div>
+                  <CardFooter className="space-y-2 col-span-3 ">
+                    <div className="w-full ">
+                      <span className="text-2xl font-bold mb-4">
+                        Total a Pagar:{" "}
+                        <p className="text-xl font-bold text-primary">
+                          <FormatPrecio precio={totalPrice} />
+                        </p>
+                      </span>
+                      <Button
+                        onClick={handleSubmit}
+                        className="w-full amazon-button"
+                      >
+                        Realizar Pago
+                      </Button>
+                    </div>
+                  </CardFooter>
               </div>
             )}
 
             {paymentMethod === "paypal" && (
-              <div className="space-y-4">
-                <p className="text-gray-600 pt-5">
-                  Será redirigido a PayPal para completar su pago.
+              // cargar el componente de paypal
+              <div className="w-full pt-5">
+                <p className="text-2xl font-bold mb-4 flex items-center gap-2">
+                  Total a Pagar:{" "}
+                  <span className="text-xl font-bold text-primary">
+                    <FormatPrecio precio={totalPrice} />
+                  </span>
                 </p>
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="paypal-email"
-                    className="text-sm font-medium text-gray-700"
-                  >
-                    Correo electrónico de PayPa
-                  </Label>
-                  <Input
-                    id="paypal-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    className="w-full"
-                  />
-                </div>
+                <PayPalForm cartItems={cartItens} />
               </div>
             )}
           </CardContent>
-          <CardFooter>
-            <div className="w-full">
-              <p className="text-2xl font-bold mb-4">
-                Total a Pagar: {totalPrice.toFixed(2)} €
-              </p>
-              <Button onClick={handleSubmit} className="w-full amazon-button">
-                Realizar Pago
-              </Button>
-            </div>
-          </CardFooter>
         </Card>
       </div>
     </div>
